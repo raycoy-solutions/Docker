@@ -1,0 +1,10 @@
+FROM diamol/golang AS builder
+WORKDIR /web
+COPY . /web
+RUN go build -o /web/server
+RUN chmod +x /web/server 
+
+FROM scratch 
+WORKDIR /myapp
+COPY --from=builder /web/server .
+ENTRYPOINT [ "/web/server" ]

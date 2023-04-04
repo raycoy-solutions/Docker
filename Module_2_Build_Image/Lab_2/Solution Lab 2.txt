@@ -1,0 +1,46 @@
+mkdir apache-php && cd apache-php
+
+touch welcome.php
+    - add php application to welcome.php
+        <?php
+            $hourOfDay = date('H');
+            if($hourOfDay < 12) {
+                $message = "Good Morning";
+            } elseif($hourOfDay > 11 && $hourOfDay < 18) {
+                $message = "Good Afternoon";
+            } elseif($hourOfDay > 17){
+                $message = "Good Evening";
+            }
+            echo $message;
+        ?>
+    
+
+## Dockerfile
+
+    # Start with Ubuntu base image
+    FROM ubuntu:20.04
+    # Set labels
+    LABEL maintainer=sathsara
+    LABEL version=1.0
+    # Set environment variables
+    ENV DEBIAN_FRONTEND=noninteractive
+    # Install Apache, PHP, and other packages
+    RUN apt-get update && \
+        apt-get -y install apache2 \
+        php \
+        curl
+    # Copy all php files to the Docker image
+    COPY *.php /var/www/html
+    # Set working directory
+    WORKDIR /var/www/html
+    # Create health check
+    HEALTHCHECK --interval=5s --timeout=3s --retries=3 CMD curl -f http://localhost || exit 1
+    # Expose Apache
+    EXPOSE 80
+    # Start Apache
+    ENTRYPOINT ["apache2ctl", "-D", "FOREGROUND"]
+
+
+docker image build -t apache-php .
+
+docker container run -p 8087:80 --name apache-php-container -d apache-php

@@ -1,0 +1,101 @@
+##################################
+### Lab 1: Volumes
+##################################
+
+NOTE:
+    - Volumes can be created and managed outside the scope of any container
+    - If you start a container with a volume that doesn’t yet exist, Docker creates the volume for you. 
+
+## Create a volume
+
+    docker volume create app-vol
+
+
+## List Volumes
+
+    docker volume ls 
+
+## Inspect a volume
+
+    docker volume inspect app-vol
+
+## Remove a volume 
+
+    docker volume rm app-vol
+
+
+##########################
+## Start a container with a volume 
+######################
+
+Two approaches
+    -v (--volume) (older and concise)
+
+    --mount (newer but verbose)
+
+Task 1: using --mount flag
+
+    - Format:
+        --mount source=<volume name>,target=<mounted location in container>,readonly
+
+    docker run -d --name devtest --mount source=app-vol1,target=/app nginx:latest
+
+
+
+Task 2: using -v or --volume flag
+    - Format:
+        -v <volume name>:<mounted location in container>:ro
+           (optional)                                   (optional)   
+
+    docker run -d --name prodtest -v app-vol2:/app nginx:latest
+
+
+
+## Stop and remove the volume (Volume removal is a separate step)
+    docker container stop devtest
+    docker container rm devtest
+    docker volume rm myvol2
+
+
+
+## Other examples:
+    docker run -d --name=nginxtest --mount source=nginx-vol,destination=/usr/share/nginx/html nginx:latest
+
+    docker run -d --name=nginxtest -v nginx-vol:/usr/share/nginx/html nginx:latest
+
+    # As read only volume
+        docker run -d --name=nginxtest -v nginx-vol:/usr/share/nginx/html:ro nginx:latest
+        docker run -d --name=nginxtest --mount source=nginx-vol,destination=/usr/share/nginx/html,readonly nginx:latest
+
+
+
+##################################
+### Lab 2: Bind Mounts
+##################################
+
+NOTE:
+    - a file or directory on the host machine is mounted into a container
+    - the file or directory is referenced by its absolute path on the host machine
+    - Can use either -v (--volume) or --mount flag
+
+
+##########################
+## Start a container with bind mount 
+######################
+
+# Task 1: Using --mount flag
+    docker container run -d -it --name devtest --mount type=bind,source="$(pwd)"/target,target=/app nginx:latest
+    
+
+# Task 2: Using -v (--volume) flag
+    docker run -d -it --name devtest -v "$(pwd)"/target:/app nginx:latest
+
+    On Windows:
+        docker run -d -it --name devtest -v C:\Users\lucya\desktop\raycoy\storage:/app nginx:latest
+
+
+    docker inspect devtest
+
+# Task 3: Use a read-only bind mount
+    docker run -d -it --name devtest -v "$(pwd)"/target:/app:ro nginx:latest
+    docker run -d -it --name devtest --mount type=bind,source="$(pwd)"/target,target=/app,readonly nginx:latest

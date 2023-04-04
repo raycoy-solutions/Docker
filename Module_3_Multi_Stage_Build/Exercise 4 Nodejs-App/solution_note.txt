@@ -1,0 +1,3 @@
+docker image build -t access-log .
+
+docker container run --name accesslog -d -p 801:80 --network nat access-log

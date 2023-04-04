@@ -1,0 +1,30 @@
+########################
+## Normal Docker Builds
+#######################
+
+    ## helloworld.go
+
+        package main
+
+        import "fmt"
+        func main() {
+            fmt.Println("Hello World")
+        }
+
+    ## Dockerfile
+        # Start from latest golang parent image
+        FROM golang:latest
+        # Set the working directory
+        WORKDIR /myapp
+        # Copy source file from current directory to container
+        COPY helloworld.go .
+        # Build the application
+        RUN go build -o helloworld .
+        # Run the application
+        ENTRYPOINT ["./helloworld"]
+    
+
+    docker image build -t helloworld:v1 .
+
+    # observe the built image with the docker image ls command
+    # a huge Docker image of 805 MB in size

@@ -1,0 +1,83 @@
+## Define your own bridge network
+
+
+	(1) List current networks before you do anything else
+		
+		docker network ls
+
+	(1b) Create the alpine-net network
+
+		docker network create --driver bridge raycoy-net
+
+		docker network create raycoy-net
+
+		docker network ls
+
+
+	
+	(2) Start two alpine containers running ash
+		
+		docker run -dit --name alpine1 alpine ash
+
+		docker run -dit --name alpine2 alpine ash
+
+		docker container ls
+
+
+
+	(3) Inspect the bridge network to see what containers are connected to it
+		
+		docker network inspect raycoy-net
+
+		- Confirm no containers yet
+	
+	
+	(3b) Create three (3) containers with the network you just created (--network):
+
+		docker run -dit --name alpine1 --network alpine-net alpine ash
+
+ 		docker run -dit --name alpine2 --network alpine-net alpine ash
+
+ 		docker run -dit --name alpine3 alpine ash
+
+
+
+	(3c) Inspect the raycoy-net network again
+
+		docker network inspect raycoy-net
+
+
+
+	(4) Attach to the containers running in the background. 
+		
+		docker container attach alpine1
+
+
+	(5) From within alpine1, make sure you can connect to the internet by pinging google.com
+
+		ping -c 2 google.com
+
+
+	(6) Try to ping the second container by its IP address 172.17.0.3
+		
+		ping -c 2 172.17.0.3
+
+
+	(6b) Try to ping the third container by its IP address 172.17.0.3
+		
+		ping -c 2 172.17.0.4
+
+
+
+	(7) Try to ping the alpine2 container by container name
+
+		ping -c 2 alpine2
+
+		ping -c 2 alpine3
+
+
+
+	(8) Stop and remove containers
+
+		docker container stop alpine1 alpine2
+		docker container rm alpine1 alpine2

@@ -1,0 +1,39 @@
+#### Pushing an image to Docker Hub
+#########################################
+
+Push Image Registry
+    - Public registry ( dockerhub)
+    - Private registry 
+
+1. Build your image
+
+    docker build -t <give your image a name> .
+
+    docker build -t josephapp .
+
+
+2. Tag the image for Docker Hub
+
+    IMAGE_TAG: => docker.io/[USERNAME]/[REPOSITORY]:[ VERSION_TAG ]
+
+    docker tag <image ID or name> docker.io/josiokoko/goapp:v0.1
+
+    docker tag josephapp docker.io/josiokoko/goapp:v0.1
+
+    Retrieve your image ID
+    docker images
+    docker image ls
+
+
+3. Authentication: Sign in to Docker Hub
+
+    docker login -u <dockerhub username>
+
+    docker login -u josiokoko
+
+
+4. Push the Docker image to Docker Hub
+
+    docker push docker.io/<dockerhub username>/demoapp:v1
+
+    docker push docker.io/josiokoko/goapp:v0.1

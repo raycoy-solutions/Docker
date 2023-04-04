@@ -1,0 +1,3 @@
+Your manager has asked you to dockerize Apache web server to access the Apache home page from the web browser.
+Additionally, he has asked you to configure health checks to determine the health status of the Apache web server.
+

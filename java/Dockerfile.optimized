@@ -1,0 +1,10 @@
+FROM openjdk:11 AS buildstage 
+COPY . /app1
+RUN javac Hello.java
+WORKDIR /app1 
+
+FROM openjdk:11-jre-slim 
+COPY --from=buildstage /app1/Hello.class /app2/ 
+WORKDIR /app2
+# CMD java Hello
+CMD [ "java", "Hello" ]

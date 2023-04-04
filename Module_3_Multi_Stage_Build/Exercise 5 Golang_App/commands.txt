@@ -1,0 +1,13 @@
+
+docker build -t lab5-go-app:v1 .
+
+docker images
+
+docker container run -p 8080:8080 --name lab5-go-app-container lab5-go-app:v1
+
+
+http://127.0.0.1:8080/
+
+http://127.0.0.1:8080/contact
+
+http://127.0.0.1:8080/login

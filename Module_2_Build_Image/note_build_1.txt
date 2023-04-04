@@ -1,0 +1,224 @@
+## Objectives:
+By the end of this module, you will be able to:
+- Write a Dockerfile using the common directives
+- Build custom Docker images with the Dockerfile
+
+## Building our own Images
+
+    - docker commit command
+    - Dockerfile
+
+
+## Dockerfile
+    - A Dockerfile is a text file that contains instruction on how to create a Docker image
+    - A Dockerfile is a set of procedural instructions used to build your container.
+    - The commands/instructions are known as directives
+
+- A Docker image consists of multiple layers, each layer represents the commands prrovided in the Dockerfile
+- The layers are read-only, stacked on top of one another
+
+## Common Directives in Dockerfiles
+(1) FROM directive
+(2) LABEL directive
+(3) RUN directive
+(4) CMD directive
+(5) ENTRYPOINT directive
+(6) ENV directive
+(7) ARG directive
+(6) ADD directive
+(7) WORKDIR directive
+(8) COPY directive
+(9) EXPOSE directive
+(10) VOLUME directive
+(11) USER directive
+
+## FROM Directive
+    - Dockerfile usually (but not always) starts with the FROM directive
+    - Specifies the base image
+    - format:
+        FROM <image>:<tag>
+
+        FROM ubuntu:20.04
+
+## LABEL Directive
+    - A key-value pair
+    - Use to add metadata to a Docker image
+    - e.g. to add the name of the author 
+    - format:
+        LABEL <key>=<value>
+
+        LABEL maintaner=my-email@gmail.com
+        LABEL version=1.0
+        LABEL environment=dev
+    
+    (OR)
+
+        LABEL maintaner=my-email@gmail.com version=1.0 environment=dev
+
+## RUN Directive
+    - Used to execute commands during image build time
+    - Creates a new layer on top of existing layers
+    - Used to install or update packages, create users or groups etc.
+
+    - format:
+        RUN <command>
+
+        RUN apt-get update
+        RUN apt-get install nginx -y
+
+        RUN apt-get update && apt-get install nginx -y
+
+## CMD Directive
+    - Used to provide default command that will be executed when a container is created from the Docker image
+    - Dockerfile can execute only one CMD directive
+    - If there is more than one CMD directive, the last one is executed
+
+        python3 filename.py
+
+    - format:
+        examples:
+            CMD ["echo", "Hello, world!"] => echo "Hello world"
+
+            CMD ["python3", "hello.py"] => python3 hello.py
+            CMD python hello.py
+
+
+## RUN vs. CMD
+    - RUN directive will be executed during image build process
+    - CMD will be executed once a container is launched
+
+    - Multiple RUN directives in a Dockerfile
+    - Can be only one CMD directive in a Dockerfile
+
+
+## ENTRYPOINT Directive
+    - Used to provide default command that will be executed atwhen a container is creed from the Docker image
+    - Unlike CMD, you cannot override the ENTRYPOINT 
+
+        ENTRYPOINT ["python3", "hello.py"]
+
+
+## ENV Directive
+    - Used to set environment variables
+    - Define as key-value pairs
+
+
+## ARG Directive
+    - Used to defined variables that the user can pass at build time
+    - Only directive than can precede the FROM directive in the Dockerfile
+    - format:
+
+        ARG USER=TestUser
+        ARG VERSION=1.0.0
+
+        ARG MYBASEIMAGE=node
+
+
+## ENV vs. ARG
+    - ARG variables are not accessible from running container
+    - ARG variables are only available during build process
+
+    - ENV is available in both the Docker image layers and containers
+
+    ARG TAG=20.04
+    FROM ubuntu:$TAG
+    LABEL maintainer=joseph123@gmail.com
+    ENV ENVIRONMENT=development
+    CMD ["env"]
+
+docker image build -t my-example1 .
+
+## EXPOSE Directive
+    - Used to inform Docker that the container is listening on the specified ports at runtime
+    - port exposed is only accessible from within the Docker containers
+    - the port needs to be published 
+
+    EXPOSE <port>
+
+    EXPOSE 8080
+
+
+###################
+## Task 1: prepare an image with the Python, Git and JDK toolkits
+###################
+    touch Dockerfile
+
+    #  Add to Dockerfile
+    FROM ubuntu:20.04
+    RUN apt-get update && apt-get install -y git python
+
+
+    docker image build -t custom-ubuntu .
+
+
+#################
+## Task 2: Build Docker Image for your application
+#################    
+    Create a new directory and, inside this directory, create a hello.py file
+
+    Add the following python code:
+
+        print("Hello World from Python!")
+
+    
+    touch Dockerfile
+
+        # Add to Dockerfile
+        FROM ubuntu:20.04
+        RUN apt-get update && apt-get install -y python3
+        COPY hello.py .
+        ENTRYPOINT ["python3", "hello.py"]
+    
+
+    docker image build -t python-app .
+
+    docker container run python-app .
+
+
+##############
+Task 3: Revise Task 2 with environment variable
+##############
+    - Change hello.py script to:
+
+        import os
+        print("Hello Docker from %s environment!" % os.environ['NAME'])
+
+    - Add ENV to your Dockerfile
+
+        # Add to Dockerfile
+        FROM ubuntu:20.04
+        ENV NAME development
+        RUN apt-get update && apt-get install -y python3
+        COPY hello.py .
+        ENTRYPOINT ["python3", "hello.py"]
+    
+    docker image build -t python-app-env .
+    
+    docker container run python-app-env
+
+    docker run -e NAME=production python-app-env
+
+
+
+Task 4:
+
+    - Create a new appdocker directory and an index.html page in it
+
+        <html>
+            <body>
+                <h1>Welcome to my new app</h1>
+                This page is test for my demo Dockerfile.<br />
+                Enjoy ...
+            </body>
+        </html>
+
+    - Create a Dockerfile with the following content
+
+        touch Dockerfile
+
+            FROM httpd:latest
+            COPY index.html /usr/local/apache2/htdocs/
+    
+    docker image build -t apacheapp:v1 .
+
+    docker container run -d --name apacheapp-container -p 8080:80 apacheapp:v1

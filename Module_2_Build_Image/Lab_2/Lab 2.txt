@@ -1,0 +1,25 @@
+Challenge:
+
+Imagine that you want to deploy a PHP welcome page that will greet visitors based on the date and time using the following logic.
+Your task is to dockerize the PHP application provided by the developer.
+Use Apache web server installed on an Ubuntu base image
+
+
+<?php
+    $hourOfDay = date('H');
+    if($hourOfDay < 12) {
+        $message = "Good Morning";
+    } elseif($hourOfDay > 11 && $hourOfDay < 18) {
+        $message = "Good Afternoon";
+    } elseif($hourOfDay > 17){
+        $message = "Good Evening";
+    }
+    echo $message;
+?>
+
+Hint:
+    1. Create a directory and change into the directory
+    2. Create a welcome.php with code provided
+    3. Create a Dockerfile and set up the application with PHP and Apache2 on Ubuntu base image
+    4. Build and run the Docker image
+

@@ -1,0 +1,35 @@
+# Create a network
+    docker network create pg-network
+
+# Run pgadmin container
+    docker run -p 5050:80 -e 'PGADMIN_DEFAULT_EMAIL=user@example.com' -e 'PGADMIN_DEFAULT_PASSWORD=admin' -d --network=pg-network dpage/pgadmin4
+
+# Run postgres container
+    docker container run -itd --name postgres-db -e POSTGRES_PASSWORD=password -e POSTGRES_USER=josepj -p 5532:5432 --network=pg-network postgres:12
+
+
+
+http://localhost:5050/login or http://127.0.0.1:5050/login
+
+
+
+psql --username admin --password
+
+# List database
+    admin=# \dt
+
+# connect to a different db
+    admin=# \c new_db  (OR \connect new_db)
+
+    new_db=# \dt
+    new_db=# select * from students;
+
+# exit postgres
+    exit
+
+# Default postgres data location
+    /var/lib/postgresql/data
+
+
+docker container rm -f $(docker container ls -aq)
+docker image rmi -f $(docker image ls -aq)

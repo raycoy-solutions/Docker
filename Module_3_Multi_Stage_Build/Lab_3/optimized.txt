@@ -1,0 +1,5 @@
+
+
+docker build -t welcome-optimized:v1 .
+
+docker images

@@ -1,0 +1,82 @@
+## Manage data in Docker
+    - Containers are ephemeral 
+    - Data doesn’t persist when that container no longer exists
+
+
+
+## Options for persisting data (store data on host machine)
+    (1) volume
+    (2) bind mounts
+    (*) tmpfs mount (store data in the host’s system memory) - Not persisted
+    
+    (*) Volumes and bind mounts let you share files between the host machine and container so that you can persist data even after the container is stopped
+
+
+
+
+
+
+## volumes 
+    - Volumes are stored in a part of the host filesystem which is managed by Docker
+    - Non-Docker processes should not modify this part of the filesystem. 
+    - Created and managed by Docker
+    - volumes are managed by Docker and are isolated from the core functionality of the host machine
+
+    **Create a volume
+
+        docker volume create <volume name>
+
+        docker volume create mydb
+    
+    **Remove volume
+        docker volume prune
+
+    docker volume inspect --format '{{ .Mountpoint }}' <volume name>
+
+
+
+
+
+
+
+## Bind mounts
+    - Bind mounts may be stored anywhere on the host system. 
+    - Can be any system files or directories.
+    - Non-Docker processes on the Docker host or a Docker container can modify them at any time.
+    - A file or directory on the host machine is mounted into a container
+    - The file or directory is referenced by its full path on the host machine
+
+    - ## Bind mounts allow access to sensitive files
+        - Can change the host filesystem via processes running in a container
+        - Security implications 
+
+
+
+
+
+## tmpfs mounts 
+    - tmpfs mouts are stored in the host system’s memory only
+    - Never written to the host system’s filesystem
+    - Not persisted
+    - Unlike volumes and bind mounts, you can’t share tmpfs mounts between containers.
+    - This functionality is only available if you’re running Docker on Linux.
+
+
+
+
+
+## Use cases for volumes
+    - Sharing data among multiple running containers (Multiple containers can mount the same volume simultaneousl)
+    - When the Docker host is not guaranteed to have a given directory or file structure (i.e. Decoupling)
+    - When you want to store your container’s data on a remote host or a cloud provider, rather than locally
+    - When you need to back up, restore, or migrate data from one Docker host to another, volumes are a better choice
+
+
+
+
+## use cases for bind mounts
+    - Sharing configuration files from the host machine to containers
+    - Sharing source code or build artifacts between a development environment on the Docker host and a container.
+
+
+

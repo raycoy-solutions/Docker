@@ -1,0 +1,42 @@
+Task
+    Your manager has asked you to dockerize a simple Golang application. 
+    You are provided with the Golang source code file, and your task is to compile and run this file. 
+    In this lab, you will build a Docker image using the normal build process. 
+    You will then observe the image size of the final Docker image
+
+Solution:
+    1. Create a new directory named normal-build and navigate to the newly created directory:
+        mkdir normal-build && normal-build
+
+    2. Create a file named welcome.go
+        touch welcome.go
+    
+    3. Open the welcome.go file using your favorite text editor:
+        vi welcome.go
+
+    4. Add the following content to the welcome.go file, save it, and exit from the welcome.go file:
+
+            package main
+
+            import "fmt"
+            func main() {
+                fmt.Println("Welcome to multi-stage Docker builds")
+            }
+
+    5. Create a file named Dockerfile
+        touch Dockerfile
+
+    6. Add the following content to the Dockerfile
+
+        FROM golang:latest
+        WORKDIR /myapp
+        COPY welcome.go .
+        RUN go build -o welcome .
+        ENTRYPOINT ["./welcome"]
+
+    7. docker build -t welcome:v1 .
+
+    8. docker image ls
+
+    9. Check the image size 
+    

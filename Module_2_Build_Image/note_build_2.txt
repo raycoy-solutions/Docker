@@ -1,0 +1,37 @@
+## Packaging software with Dockerfile
+############################################################
+
+Let’s say we have a hello.py file with the following content:
+
+    from flask import Flask
+    app = Flask(__name__)
+
+    @app.route("/")
+    def hello():
+        return "Hello World!"
+
+
+Dockerfile that will be used to create an image for our application
+
+    # syntax=docker/dockerfile:1
+    FROM ubuntu:22.04
+
+    # install app dependencies
+    RUN apt-get update && apt-get install -y python3 python3-pip
+    RUN pip install flask==2.1.*
+
+    # install app
+    # use the COPY instruction to copy our hello.py file from the local build context into the root directory of our image
+    COPY hello.py /
+
+    # final configuration
+
+    # ENV instruction sets a Linux environment variable we’ll need later
+    ENV FLASK_APP=hello
+
+    # This EXPOSE instruction marks that our final image has a service listening on port 8000
+    EXPOSE 8000
+    CMD flask run --host 0.0.0.0 --port 8000
+
+FROM ubuntu:22.04
+FROM instruction sets our base image to the 22.04 release of Ubuntu

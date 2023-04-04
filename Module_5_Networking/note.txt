@@ -1,0 +1,27 @@
+###################################################
+#######      Networking ###########################
+###################################################
+
+Why network in Docker?
+	- Applications do not run in isolation
+	- Applications need to communicate with other systems over the network
+
+	(*) For example, consider an application that is made up of:
+		- a website;
+		- a web server;
+		- database; and
+		- cache server
+	
+
+## Docker network drivers:
+	(1) bridge:
+		- default network driver;
+		- standalone containers that need to communicate
+		- User-defined bridge networks are best when you need multiple containers to communicate on the same Docker host
+
+	(2) host 
+		- remove network isolation between the container and the Docker host
+
+	(3) none:
+		- Disable all networking
+		- Usually used in conjunction with a custom network driver

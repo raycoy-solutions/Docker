@@ -1,0 +1,19 @@
+Imagine that you have been tasked with deploying a Golang HTTP server to a Docker container. 
+Your manager has asked you to build a minimal-sized Docker image and observe best practices while building the Dockerfile.
+
+
+This Golang HTTP server will return different responses based on the invoke URL:
+
+    http://127.0.0.1:<port>/            Home Page
+
+    http://127.0.0.1:<port>/contact     Contact Us
+
+    http://127.0.0.1:<port>/login       Login Page
+
+
+Execute the following steps to complete this activity:
+    1. Create a folder to store the activity files.
+    2. Create a main.go file with the code provided in the preceding code block.
+    3. Create a multi-stage Dockerfile with two stages. The first stage will use the golang image. This stage will build the Golang application using the go build command. The second stage will use an alpine image. This stage will copy the executable from the first stage and execute it.
+    4. Build and run the Docker image.
+    5. Once completed, stop and remove the Docker container.

@@ -1,0 +1,48 @@
+## Multi-stage Dockerfiles
+    - Optimize Docker image size while running Docker images in production environments
+    - Create multiple intermediate Docker images during the build process and selectively copy only essential artifacts from one stage to the other
+
+
+
+## Dockerfile Best Practices
+    - ensure reduced build time; 
+    - reduced image size; 
+    - increased security; and 
+    - increased maintainability of the Docker images
+
+    (1) Using an Appropriate Parent Image
+        - use official images from the Docker Hub as the parent image
+        - avoid using the latest tag for the parent image when building Docker images for production environments
+        - use the minimal version of the parent image is critical to getting a minimal-sized Docker image
+    
+    (2) Using a Non-Root User for Better Security
+        - By default, Docker containers run with the root (id = 0) user
+        - Running as a root user is considered a bad security practice when running Docker containers in production environments
+        - Using the --user (or -u) flag with the docker run command is one method for changing the default user 
+        - Use the USER directive within the Dockerfile to define the default user
+
+            FROM ubuntu:focal
+            RUN apt-get update
+            RUN useradd demo-user
+            USER demo-user
+            CMD whoami
+
+    (3) Using dockerignore
+        - specify a list of files to be excluded from the Docker context while building the Docker image
+    
+    (4) Minimizing Layers
+
+            FROM ubuntu:focal
+            RUN apt-get update
+            RUN apt-get install -y nginx
+            RUN apt-get install -y redis-server
+
+        (Convert to:)
+
+            FROM ubuntu:focal
+            RUN apt-get update && apt-get install -y nginx redis-server
+    
+    (5) Don't Install Unnecessary Tools
+        - Not installing unnecessary debugging tools (such as vim, curl, and telnet) 
+        - Removing unnecessary dependencies can help to create efficient Docker images that are small in size
+
